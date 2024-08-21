@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Websocket test</title>
+        <style>
+                p {
+                        margin: 1%;
+                }
+        </style>
+</head>
+
+<body style="display: flex; background-color: black; color: grey; flex-flow: column;">
+        <p id="status">No Connection</p>
+        <p id="msg">No Message</p>
+        <script>
+                const ws = new WebSocket("ws://localhost:8080/ws");
+                ws.onopen = function (openEvent) {
+                        console.log("WebSocket ist mit dem " + ws.protocol + " Protokoll geöffnet");
+                        document.getElementById("status").inner = "Connected to " + ws.url;
+                        ws.send("Hello Server!");
+                }
+                ws.onmessage = function (messageEvent) {
+                        document.getElementById("msg").inner = messageEvent.data;
+                        console.log(messageEvent.data);
+                        if (messageEvent.data === "reload") {
+                                window.location.reload();
+                        }
+                };
+                ws.onclose = function (closeEvent) {
+                        console.log("WebSocket wurde geschlossen");
+                        document.getElementById("status").inner = "No Connection";
+                };
+        </script>
+</body>
+
+</html>
